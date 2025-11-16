@@ -3,6 +3,8 @@ import './App.css'
 import TinderCard from './components/TinderCard'
 import Header from './components/Header'
 import MatchModal from './components/MatchModal'
+import ProfileCreation from './components/ProfileCreation'
+import ChatInterface from './components/ChatInterface'
 
 // Sample Clanker profiles
 const clankers = [
@@ -65,11 +67,19 @@ const clankers = [
 ];
 
 function App() {
+  const [appState, setAppState] = useState('profile-creation'); // 'profile-creation', 'swiping', 'chat'
+  const [userProfile, setUserProfile] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(clankers.length - 1);
   const [matches, setMatches] = useState([]);
   const [showMatch, setShowMatch] = useState(false);
   const [lastMatch, setLastMatch] = useState(null);
   const [likes, setLikes] = useState([]);
+  const [activeChatClanker, setActiveChatClanker] = useState(null);
+
+  const handleProfileComplete = (profileData) => {
+    setUserProfile(profileData);
+    setAppState('swiping');
+  };
 
   const handleSwipe = (direction, clanker) => {
     if (direction === 'right') {
@@ -91,6 +101,28 @@ function App() {
     setShowMatch(false);
   };
 
+  const handleStartChat = (clanker) => {
+    setActiveChatClanker(clanker);
+    setAppState('chat');
+    setShowMatch(false);
+  };
+
+  const handleBackFromChat = () => {
+    setActiveChatClanker(null);
+    setAppState('swiping');
+  };
+
+  // Profile creation flow
+  if (appState === 'profile-creation') {
+    return <ProfileCreation onProfileComplete={handleProfileComplete} />;
+  }
+
+  // Chat interface
+  if (appState === 'chat' && activeChatClanker) {
+    return <ChatInterface clanker={activeChatClanker} onBack={handleBackFromChat} />;
+  }
+
+  // Main swiping interface
   return (
     <div className="app">
       <Header matchCount={matches.length} />
@@ -111,12 +143,24 @@ function App() {
           <div className="no-more-cards">
             <h2>No more Clankers nearby! 🤖</h2>
             <p>Check back later for new profiles</p>
+            {matches.length > 0 && (
+              <button 
+                className="view-matches-btn"
+                onClick={() => handleStartChat(matches[0])}
+              >
+                View Your Matches
+              </button>
+            )}
           </div>
         )}
       </div>
 
       {showMatch && lastMatch && (
-        <MatchModal clanker={lastMatch} onClose={closeMatchModal} />
+        <MatchModal 
+          clanker={lastMatch} 
+          onClose={closeMatchModal}
+          onStartChat={handleStartChat}
+        />
       )}
     </div>
   );

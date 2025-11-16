@@ -65,10 +65,33 @@
   margin-bottom: 30px;
 }
 
-.close-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.match-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.chat-button {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
   color: white;
   border: none;
+  padding: 15px 40px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.chat-button:hover {
+  transform: scale(1.05);
+}
+
+.close-button {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
   padding: 15px 40px;
   border-radius: 30px;
   font-size: 16px;

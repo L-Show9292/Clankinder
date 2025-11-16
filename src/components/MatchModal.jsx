@@ -1,7 +1,7 @@
 import './MatchModal.css';
 import RobotAvatar from './RobotAvatar';
 
-function MatchModal({ clanker, onClose }) {
+function MatchModal({ clanker, onClose, onStartChat }) {
   return (
     <div className="match-modal-overlay" onClick={onClose}>
       <div className="match-modal" onClick={(e) => e.stopPropagation()}>
@@ -20,9 +20,14 @@ function MatchModal({ clanker, onClose }) {
             You and {clanker.name} have liked each other!
           </p>
 
-          <button className="close-button" onClick={onClose}>
-            Keep Swiping
-          </button>
+          <div className="match-buttons">
+            <button className="chat-button" onClick={() => onStartChat(clanker)}>
+              Start Chatting
+            </button>
+            <button className="close-button" onClick={onClose}>
+              Keep Swiping
+            </button>
+          </div>
         </div>
       </div>
     </div>
